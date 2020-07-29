@@ -54,7 +54,7 @@ public class BarrigaTest extends BaseTest {
 			.statusCode(201)
 		;
 		
-	}
+	}	
 	
 	@Test
 	public void deveAlterarContaComSucesso() {		
@@ -66,8 +66,22 @@ public class BarrigaTest extends BaseTest {
 			.put("/contas/221069")
 		.then()
 			.statusCode(200)
-			.log().all()
 			.body("nome", is("conta alterada"))
+		;
+		
+	}
+	
+	@Test
+	public void naoDeveIncluirContaComMesmoNome() {	
+		
+		given()
+			.header("Authorization", "JWT " + TOKEN)
+			.body("{\"nome\": \"conta alterada\"}")
+		.when()
+			.post("/contas")
+		.then()
+			.statusCode(400)
+			.body("error", is("Já existe uma conta com esse nome!"))
 		;
 		
 	}
